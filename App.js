@@ -1,20 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useContext } from "react";
+import {
+  Button,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-export default function App() {
+import Nav from "./content/Nav";
+import ActualPage from "./content/ActualPage";
+import { NavFunction } from "./data/NavContext";
+
+
+const App = () => {
+  const [StatusBarColor, setStatusBarColor] = useState("");
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <StatusBar
+        backgroundColor={StatusBarColor.color}
+        barStyle={StatusBarColor.style}
+        hidden={false}
+      />
+      <View style={styles.container}>
+        <NavFunction>
+          <ActualPage />
+          <Nav style={(newVal) => setStatusBarColor(newVal)} />
+          
+        </NavFunction>
+      </View>
+    </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
+
+export default App;
