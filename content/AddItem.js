@@ -14,14 +14,23 @@ import {
 import NavContext from "../data/NavContext";
 
 const AddItem = () => {
-  const { search, filter } = useContext(NavContext);
+  const { search, filter, BASEURL, changeFilter, changeUpdate, update } = useContext(NavContext);
   const [customFilter, setCustomFilter] = useState("");
   const WIDTH = Dimensions.get("window").width;
 
   const CreateItem = () => {
-    filter === "Összes"
-      ? console.log(`CreateItem: ${search}; ${customFilter}`)
-      : console.log(`CreateItem: ${search}; ${filter}`);
+    fetch(`${BASEURL}addpalinka.php`, {
+      method: "post",
+      body: JSON.stringify({
+        search,
+        filter: filter === "Összes" ? customFilter : filter,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        changeUpdate(!update);
+      });
+
   };
 
   return (
@@ -42,15 +51,8 @@ const AddItem = () => {
         }}
       >
         <Text style={[styles.text, styles.bold]}>{search}</Text>
-        {filter === "Összes" ? (
-          <TextInput
-            style={styles.input}
-            placeholder="Kiszerelés"
-            onChangeText={setCustomFilter}
-          />
-        ) : (
-          <Text style={[styles.text, styles.italic]}>{filter}</Text>
-        )}
+
+        <Text style={[styles.text, styles.italic]}>{filter === "Összes" ? "Válassz kiszerelést" : filter}</Text>
       </View>
       <Pressable style={styles.add} onPressIn={CreateItem}>
         <View

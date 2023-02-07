@@ -8,3 +8,8 @@ function validate_input($data){
 
     return $data;
 }
+
+
+function send_data($res){
+    echo json_encode($res);
+}

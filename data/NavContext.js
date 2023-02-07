@@ -4,11 +4,12 @@ import * as ScreenOrientation from "expo-screen-orientation";
 const NavContext = createContext();
 
 export function NavFunction({ children }) {
-    const BASEURL = "http://www.gyulaibalazs.hu/RAJMI_APP/";
+    const BASEURL = "http://192.168.0.26/";
     const [page, setPage] = useState("Raktáron");
     const [showMenu, setShowMenu] = useState(false);
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("Összes");
+    const [update, setUpdate] = useState(false);
 
     const changeFilter = (val) => {
       setFilter(val);
@@ -22,6 +23,10 @@ export function NavFunction({ children }) {
       setPage(val);
     }
 
+    const changeUpdate = (val) => {
+      setUpdate(val);
+    }
+
   return <NavContext.Provider
 value={{
     changeShowMenu,
@@ -32,7 +37,9 @@ value={{
     setSearch,
     search,
     filter,
-    changeFilter
+    changeFilter,
+    changeUpdate,
+    update
 }}
   >{children}</NavContext.Provider>;
 }

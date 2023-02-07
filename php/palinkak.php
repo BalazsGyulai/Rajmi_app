@@ -3,29 +3,55 @@
 require("./header.php");
 require("./function.php");
 
-$search = "%".validate_input($input["search"])."%";
+$search = "%" . validate_input($input["search"]) . "%";
+$filter = validate_input(str_replace("l", "", $input["filter"]));
+
 $resp = [];
 
 if ($search !== "") {
-    $stmt = $database->stmt_init();
-    if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ?')) {
-        $resp["status"] = "error";
-        $resp["code"] = "10404";
+    if ($filter != "Összes") {
 
-        echo json_encode($resp);
+        $stmt = $database->stmt_init();
+        if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? AND kiszereles = ?')) {
+            $resp["status"] = "error";
+            $resp["code"] = "10404";
+
+            echo json_encode($resp);
+        }
+
+        $stmt->bind_param("sd", $search, $filter);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $resp["data"] = [];
+        
+        foreach ($result as $item) {
+            array_push($resp["data"], $item);
+        }
+
+        send_data($resp);
+        
+    } else {
+        $stmt = $database->stmt_init();
+        if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? ')) {
+            $resp["status"] = "error";
+            $resp["code"] = "10404";
+
+            echo json_encode($resp);
+        }
+
+        $stmt->bind_param("s", $search);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $resp["data"] = [];
+        
+        foreach ($result as $item) {
+            array_push($resp["data"], $item);
+        }
+
+        send_data($resp);
     }
-
-    $stmt->bind_param("s", $search);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $resp["data"] = [];
-
-    foreach ($result as $item) {
-        array_push($resp["data"], $item);
-    }
-
-    echo json_encode($resp);
 } else {
     $resp["data"] = [];
 
@@ -35,5 +61,5 @@ if ($search !== "") {
         array_push($resp["data"], $item);
     }
 
-    echo json_encode($resp);
+    send_data($resp);
 }

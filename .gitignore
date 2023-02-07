@@ -10,8 +10,10 @@ npm-debug.*
 *.orig.*
 web-build/
 
-.php/connect_rajmi/
 
 
 # macOS
 .DS_Store
+
+#ignore
+php/connect_rajmi/connect.php

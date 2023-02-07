@@ -14,45 +14,44 @@ import Card from "../UI/Card";
 import AddItem from "./AddItem";
 
 const Raktar = () => {
-  const { page, BASEURL, search } = useContext(NavContext);
+  const { page, BASEURL, search, filter, update } = useContext(NavContext);
   const [res, setRes] = useState("");
   const WIDTH = Dimensions.get("window").width;
 
   useEffect(() => {
-    // fetch(`${BASEURL}stats.php`, {
-    //   method: "post",
-    //   body: JSON.stringify({
-    //     get: "playedYears",
-    //     gameID: "Bali62cae449dafba6.41342841",
-    //   }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     console.log(json);
+    fetch(`${BASEURL}palinkak.php`, {
+      method: "post",
+      body: JSON.stringify({
+        search,
+        filter
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
 
-    //     // setRes(json.data);
-    //   });
+        setRes(json.data);
+      });
 
-    let a = [
-      {
-        id: 1,
-        nev: "szilvás",
-        kiszereles: 0.5,
-      },
-      {
-        id: 2,
-        nev: "szilvás",
-        kiszereles: 0.5,
-      },
-      {
-        id: 3,
-        nev: "szilvás",
-        kiszereles: 0.5,
-      },
-    ];
+    // let a = [
+    //   {
+    //     id: 1,
+    //     nev: "szilvás",
+    //     kiszereles: 0.5,
+    //   },
+    //   {
+    //     id: 2,
+    //     nev: "szilvás",
+    //     kiszereles: 0.5,
+    //   },
+    //   {
+    //     id: 3,
+    //     nev: "szilvás",
+    //     kiszereles: 0.5,
+    //   },
+    // ];
 
-    setRes(a);
-  }, [search]);
+    // setRes(a);
+  }, [search, filter, update]);
 
   return (
     <ScrollView

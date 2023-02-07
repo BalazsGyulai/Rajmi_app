@@ -14,6 +14,7 @@ import Svg, { Path, G } from "react-native-svg";
 import NavContext from "../data/NavContext";
 
 const ItemInCard = ({ item }) => {
+  const { BASEURL, update, changeUpdate } = useContext(NavContext);
   const WIDTH = Dimensions.get("window").width;
   const [bkg_color, setbgr_btn] = useState("#fff");
   const [edit, setEdit] = useState(false);
@@ -29,16 +30,47 @@ const ItemInCard = ({ item }) => {
   };
 
   const deleteHandler = () => {
-    setEdit(false);
-    edit ? setbgr_btn("#fff") : setbgr_btn("#F37335");
+    fetch(`${BASEURL}multiplepalinka.php`, {
+      method: "post",
+      body: JSON.stringify({
+        id: item.id,
+        do: "delete",
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        changeUpdate(!update);
+        setEdit(false);
+        edit ? setbgr_btn("#fff") : setbgr_btn("#F37335");
+      });
   };
 
   const plusItemHandler = () => {
-    console.log("plus");
+    fetch(`${BASEURL}multiplepalinka.php`, {
+      method: "post",
+      body: JSON.stringify({
+        id: item.id,
+        do: "add",
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        changeUpdate(!update);
+      });
   };
 
   const minusItemHandler = () => {
-    console.log("minus");
+    fetch(`${BASEURL}multiplepalinka.php`, {
+      method: "post",
+      body: JSON.stringify({
+        id: item.id,
+        do: "minus",
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        changeUpdate(!update);
+      });
   };
 
   const editItemColor = () => {
@@ -68,7 +100,7 @@ const ItemInCard = ({ item }) => {
           paddingRight: 1,
           alignItems: "center",
           justifyContent: "space-between",
-          paddingBottom: 5
+          paddingBottom: 5,
         }}
       >
         <View
@@ -115,7 +147,7 @@ const ItemInCard = ({ item }) => {
             backgroundColor: TextColor2,
           }}
         ></View>
-        <Text style={[styles.text, { color: TextColor }]}>10 db</Text>
+        <Text style={[styles.text, { color: TextColor }]}>{item.darab} db</Text>
       </View>
 
       {edit ? (
