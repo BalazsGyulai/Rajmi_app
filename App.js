@@ -25,8 +25,9 @@ const App = () => {
       />
       <View style={styles.container}>
         <NavFunction>
-          <ActualPage />
           <Nav style={(newVal) => setStatusBarColor(newVal)} />
+          
+          <ActualPage />
           
         </NavFunction>
       </View>

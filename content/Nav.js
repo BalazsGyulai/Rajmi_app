@@ -31,7 +31,12 @@ const Nav = ({ style }) => {
   }, [showMenu]);
 
   return (
-    <View>
+    <>
+    <View style={{
+      position: "absolute",
+      width: "100%",
+      zIndex: 10
+    }}>
       <View
         style={{
           flexDirection: "row",
@@ -42,8 +47,9 @@ const Nav = ({ style }) => {
         <NavButton icon={MenuSvg} left={5} />
         <Search />
       </View>
-      <NavMenu />
     </View>
+    <NavMenu />
+    </>
   );
 };
 

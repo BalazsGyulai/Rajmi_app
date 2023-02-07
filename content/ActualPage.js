@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import NavContext from "../data/NavContext";
 import Raktar from "./Raktar";
+import Eladas from "./Eladas"
 
 const ActualPage = () => {
   const { page } = useContext(NavContext);
@@ -19,13 +20,11 @@ const ActualPage = () => {
     <ScrollView
       style={{
         top: 48,
-        position: "absolute",
         width: "100%",
         height: "100%",
-        zIndex: 1,
       }}
     >
-      {page === "Raktáron" ? <Raktar /> : ""}
+      {page === "Raktáron" ? <Raktar /> : page === "Eladás" ? <Eladas /> : ""}
     </ScrollView>
   );
 };

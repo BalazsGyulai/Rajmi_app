@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     borderWidth: 1,
     borderStyle: "solid",
-    borderRadius: 24,
+    borderRadius: 24
   },
 });
 

@@ -14,6 +14,7 @@ import NavContext from "../data/NavContext";
 const NavMenu = () => {
   const { showMenu } = useContext(NavContext);
   const fadeAnim = useRef(new Animated.Value(-310)).current;
+  const HEIGHT = Dimensions.get("window").height;
 
   useEffect(() => {
     if (showMenu) {
@@ -34,10 +35,10 @@ const NavMenu = () => {
   return (
     <Animated.View
       style={{
+        position: "absolute",
         transform: [{ translateX: fadeAnim }],
-        top: -48,
         width: 300,
-        height: "100%",
+        height: HEIGHT,
         zIndex: 10
       }}
     >

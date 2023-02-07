@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
@@ -7,28 +7,47 @@ import {
   Pressable,
   Image,
   Platform,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import NavContext from "../data/NavContext";
+import ItemInCard from "./ItemInCard"
 
 const Card = ({ array }) => {
   const { showMenu, changeShowMenu } = useContext(NavContext);
   const WIDTH = Dimensions.get("window").width;
+  const [bkg_color, setbgr_btn] = useState("#fff");
+
+  const EditHandler = () => {
+    setbgr_btn("#F37335");
+  };
 
   return array.map((item) => {
     return (
-      <View key={item.id} style={[styles.card, {
-        width: (WIDTH >= 800 ? (WIDTH / 5) - 10 : (WIDTH / 2) - 10),
-        height: (WIDTH >= 800 ? (WIDTH / 5) - 10 : (WIDTH / 2) - 10)
-      }]}>
+      <View>
+        <ItemInCard key={item.id} item={item}/>
+        {/* <Pressable
+          onLongPress={EditHandler}
+          key={item.id}
+          style={[
+            styles.card,
+            {
+              width: WIDTH >= 800 ? WIDTH / 5 - 10 : WIDTH / 2 - 10,
+              height: WIDTH >= 800 ? WIDTH / 5 - 10 : WIDTH / 2 - 10,
+              backgroundColor: bkg_color,
+            },
+          ]}
+        >
           <Text style={[styles.text, styles.bold]}>{item.nev}</Text>
           <Text style={[styles.text, styles.italic]}>{item.kiszereles}</Text>
-            <View style={{
-                width: "80%",
-                height: 1,
-                backgroundColor: "#d3d3d3"
-            }}></View>
+          <View
+            style={{
+              width: "80%",
+              height: 1,
+              backgroundColor: "#d3d3d3",
+            }}
+          ></View>
           <Text style={styles.text}>10 db</Text>
+        </Pressable> */}
       </View>
     );
   });
@@ -40,12 +59,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "solid",
     borderRadius: 8,
-    alignItems: "center"
+    alignItems: "center",
+    margin: 5,
   },
 
   text: {
     padding: 5,
-    fontSize: 13
+    fontSize: 13,
   },
 
   italic: {
@@ -53,10 +73,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 
-  bold:{
+  bold: {
     fontWeight: "bold",
-    fontSize: 15
-  }
+    fontSize: 15,
+  },
 });
 
 export default Card;

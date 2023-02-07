@@ -16,35 +16,69 @@ import AddItem from "./AddItem";
 const Raktar = () => {
   const { page, BASEURL, search } = useContext(NavContext);
   const [res, setRes] = useState("");
+  const WIDTH = Dimensions.get("window").width;
 
   useEffect(() => {
-    fetch(`${BASEURL}palinkak.php`, {
-      method: "post",
-      body: JSON.stringify({
-        search: search,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json.data);
+    // fetch(`${BASEURL}stats.php`, {
+    //   method: "post",
+    //   body: JSON.stringify({
+    //     get: "playedYears",
+    //     gameID: "Bali62cae449dafba6.41342841",
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     console.log(json);
 
-        setRes(json.data);
-      });
+    //     // setRes(json.data);
+    //   });
+
+    let a = [
+      {
+        id: 1,
+        nev: "szilvás",
+        kiszereles: 0.5,
+      },
+      {
+        id: 2,
+        nev: "szilvás",
+        kiszereles: 0.5,
+      },
+      {
+        id: 3,
+        nev: "szilvás",
+        kiszereles: 0.5,
+      },
+    ];
+
+    setRes(a);
   }, [search]);
 
   return (
     <ScrollView
       style={{
+        width: "100%",
+        height: "100%",
         zIndex: 1,
-        padding: 10
+        padding: 5
       }}
     >
-      {res !== "" ? 
-
-        res.length !== 0 ?
-        <Card array={res} />
-        : <AddItem />
-       : ""}
+      <View
+        style={{
+          flexDirection: "row",
+          zIndex: 1
+        }}
+      >
+        {res !== "" ? (
+          res.length !== 0 ? (
+            <Card array={res} />
+          ) : (
+            <AddItem />
+          )
+        ) : (
+          ""
+        )}
+      </View>
     </ScrollView>
   );
 };
