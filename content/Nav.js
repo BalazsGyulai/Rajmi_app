@@ -35,7 +35,7 @@ const Nav = ({ style }) => {
     <View style={{
       position: "absolute",
       width: "100%",
-      zIndex: 10
+      zIndex: 13
     }}>
       <View
         style={{

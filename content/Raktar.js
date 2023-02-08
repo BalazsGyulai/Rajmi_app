@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  RefreshControl,
   StyleSheet,
   Pressable,
   Text,
@@ -17,21 +18,15 @@ const Raktar = () => {
   const { page, BASEURL, search, filter, update } = useContext(NavContext);
   const [res, setRes] = useState("");
   const WIDTH = Dimensions.get("window").width;
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getItems();
+  }, []);
 
   useEffect(() => {
-    fetch(`${BASEURL}palinkak.php`, {
-      method: "post",
-      body: JSON.stringify({
-        search,
-        filter
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-
-        setRes(json.data);
-      });
-
+    getItems();
     // let a = [
     //   {
     //     id: 1,
@@ -49,9 +44,23 @@ const Raktar = () => {
     //     kiszereles: 0.5,
     //   },
     // ];
-
     // setRes(a);
   }, [search, filter, update]);
+
+  const getItems = () => {
+    fetch(`${BASEURL}palinkak.php`, {
+      method: "post",
+      body: JSON.stringify({
+        search,
+        filter,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setRes(json.data);
+        setRefreshing(false);
+      });
+  };
 
   return (
     <ScrollView
@@ -59,13 +68,17 @@ const Raktar = () => {
         width: "100%",
         height: "100%",
         zIndex: 1,
-        padding: 5
+        padding: 5,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View
         style={{
           flexDirection: "row",
-          zIndex: 1
+          flexWrap: "wrap",
+          zIndex: 1,
         }}
       >
         {res !== "" ? (

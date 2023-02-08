@@ -92,3 +92,24 @@ if ($do === "delete") {
     $resp["status"] = "ok";
     send_data($resp);
 }
+
+if ($do === "colorChange") {
+
+    $color = validate_input(str_replace("#", "", $input["color"]));
+    
+
+    $stmt = $database->stmt_init();
+    if (!$stmt = $database->prepare('UPDATE palinkak SET color = ? WHERE id = ?')) {
+        $resp["status"] = "error";
+        $resp["code"] = "10404";
+
+        send_data($resp);
+        exit;
+    }
+
+    $stmt->bind_param("si", $color, $id);
+    $stmt->execute();
+
+    $resp["status"] = "ok";
+    send_data($resp);
+}

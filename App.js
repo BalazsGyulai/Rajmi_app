@@ -12,9 +12,9 @@ import Nav from "./content/Nav";
 import ActualPage from "./content/ActualPage";
 import { NavFunction } from "./data/NavContext";
 
-
 const App = () => {
   const [StatusBarColor, setStatusBarColor] = useState("");
+
 
   return (
     <>
@@ -25,10 +25,8 @@ const App = () => {
       />
       <View style={styles.container}>
         <NavFunction>
-          <Nav style={(newVal) => setStatusBarColor(newVal)} />
-          
           <ActualPage />
-          
+          <Nav style={(newVal) => setStatusBarColor(newVal)} />
         </NavFunction>
       </View>
     </>
@@ -36,8 +34,7 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
 });
 
 export default App;

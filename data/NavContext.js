@@ -25,6 +25,7 @@ export function NavFunction({ children }) {
 
     const changeUpdate = (val) => {
       setUpdate(val);
+      console.log("refresh");
     }
 
   return <NavContext.Provider

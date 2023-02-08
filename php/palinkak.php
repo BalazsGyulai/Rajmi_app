@@ -12,7 +12,7 @@ if ($search !== "") {
     if ($filter != "Összes") {
 
         $stmt = $database->stmt_init();
-        if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? AND kiszereles = ?')) {
+        if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? AND kiszereles = ? ORDER BY darab DESC, nev ASC, kiszereles DESC')) {
             $resp["status"] = "error";
             $resp["code"] = "10404";
 
@@ -33,7 +33,7 @@ if ($search !== "") {
         
     } else {
         $stmt = $database->stmt_init();
-        if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? ')) {
+        if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? ORDER BY darab DESC, nev ASC, kiszereles DESC ')) {
             $resp["status"] = "error";
             $resp["code"] = "10404";
 
@@ -55,7 +55,7 @@ if ($search !== "") {
 } else {
     $resp["data"] = [];
 
-    $result = $database->query("SELECT * FROM palinkak");
+    $result = $database->query("SELECT * FROM palinkak ORDER BY darab DESC, nev ASC, kiszereles DESC");
 
     foreach ($result as $item) {
         array_push($resp["data"], $item);
