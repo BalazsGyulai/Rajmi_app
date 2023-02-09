@@ -4,45 +4,65 @@ import * as ScreenOrientation from "expo-screen-orientation";
 const NavContext = createContext();
 
 export function NavFunction({ children }) {
-    const BASEURL = "http://192.168.0.26/";
-    const [page, setPage] = useState("Raktáron");
-    const [showMenu, setShowMenu] = useState(false);
-    const [search, setSearch] = useState("");
-    const [filter, setFilter] = useState("Összes");
-    const [update, setUpdate] = useState(false);
+  const BASEURL = "http://192.168.0.26/";
+  const [page, setPage] = useState("Raktáron");
+  const [showMenu, setShowMenu] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("Összes");
+  const [update, setUpdate] = useState(false);
+  const [items, setItems] = useState("");
 
-    const changeFilter = (val) => {
-      setFilter(val);
-    }
+  const updateItems = () => {
+    fetch(`${BASEURL}palinkak.php`, {
+      method: "post",
+      body: JSON.stringify({
+        search,
+        filter,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setItems(json.data);
+      });
+  };
 
-    const changeShowMenu = (val) => {
-        setShowMenu(val);
-    }
+  const changeFilter = (val) => {
+    setFilter(val);
+  };
 
-    const changePage = (val) => {
-      setPage(val);
-    }
+  const changeShowMenu = (val) => {
+    setShowMenu(val);
+  };
 
-    const changeUpdate = (val) => {
-      setUpdate(val);
-      console.log("refresh");
-    }
+  const changePage = (val) => {
+    setPage(val);
+  };
 
-  return <NavContext.Provider
-value={{
-    changeShowMenu,
-    showMenu,
-    page,
-    changePage,
-    BASEURL,
-    setSearch,
-    search,
-    filter,
-    changeFilter,
-    changeUpdate,
-    update
-}}
-  >{children}</NavContext.Provider>;
+  const changeUpdate = (val) => {
+    setUpdate(val);
+  };
+
+  return (
+    <NavContext.Provider
+      value={{
+        changeShowMenu,
+        showMenu,
+        page,
+        changePage,
+        BASEURL,
+        setSearch,
+        search,
+        filter,
+        changeFilter,
+        changeUpdate,
+        update,
+        items,
+        updateItems
+      }}
+    >
+      {children}
+    </NavContext.Provider>
+  );
 }
 
 export default NavContext;

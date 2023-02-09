@@ -14,7 +14,7 @@ import Svg, { Path, G } from "react-native-svg";
 import NavContext from "../data/NavContext";
 
 const ItemInCard = ({ item }) => {
-  const { BASEURL, update, changeUpdate } = useContext(NavContext);
+  const { BASEURL, updateItems, items } = useContext(NavContext);
   const WIDTH = Dimensions.get("window").width;
   const [bkg_color, setbgr_btn] = useState("#fff");
   const [edit, setEdit] = useState(false);
@@ -23,18 +23,44 @@ const ItemInCard = ({ item }) => {
   const [changeItemColor, setChangeItemColor] = useState("");
   const [styleColor, setStyleColor] = useState(item.color);
   const [inputColor, setInputColor] = useState("212529");
+  const [incart, setincart] = useState(false);
+  const [was_longpressed, setlongPressed] = useState(false);
 
-  useEffect(() =>{
-    item.darab === 0 ? setStyleColor(checkColor()) : setStyleColor(checkColor());
-  }, [update]);
-  
+  useEffect(() => {
+    item.darab === 0
+      ? setStyleColor(checkColor())
+      : setStyleColor(checkColor());
+
+    item.in_cart != null ? setincart(false) : setincart(true);
+  }, [items]);
+
   const checkColor = () => {
     return item.darab === 0 ? "cccccc" : item.color;
-  }
+  };
+
+  const CartHandler = () => {
+    was_longpressed
+      ? ""
+      : fetch(`${BASEURL}cart.php`, {
+          method: "post",
+          body: JSON.stringify({
+            do: "cart",
+            item: item.id,
+          }),
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            updateItems();
+          });
+    setlongPressed(false);
+  };
 
   const EditHandler = () => {
+    setlongPressed(true);
     edit ? setStyleColor(checkColor()) : setStyleColor("F37335");
-    changeItemColor != "" ? editItemColor() : "";
+    changeItemColor != "" && changeItemColor != item.color
+      ? editItemColor()
+      : "";
     setEdit(!edit);
   };
 
@@ -48,7 +74,7 @@ const ItemInCard = ({ item }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        changeUpdate(!update);
+        updateItems();
         setEdit(false);
         edit ? setbgr_btn("#fff") : setbgr_btn("#F37335");
       });
@@ -64,7 +90,7 @@ const ItemInCard = ({ item }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        refreshItems();
+        updateItems();
       });
   };
 
@@ -78,7 +104,7 @@ const ItemInCard = ({ item }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        refreshItems();
+        updateItems();
       });
   };
 
@@ -88,22 +114,20 @@ const ItemInCard = ({ item }) => {
       body: JSON.stringify({
         id: item.id,
         do: "colorChange",
-        color: changeItemColor
+        color: changeItemColor,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        setStyleColor(changeItemColor);
+        updateItems();
       });
   };
 
-  const refreshItems = () => {
-    changeUpdate(!update);
-  }
-
   return (
     <Pressable
+      onPressIn={() => setlongPressed(false)}
       onLongPress={EditHandler}
+      onPressOut={CartHandler}
       key={item.id}
       style={[
         styles.card,
@@ -111,6 +135,8 @@ const ItemInCard = ({ item }) => {
           width: WIDTH >= 800 ? WIDTH / 5 - 15 : WIDTH / 2 - 15,
           height: 170,
           backgroundColor: bkg_color,
+          borderColor: incart ? "#d3d3d3" : "#00b4d8",
+          borderWidth: incart ? 1 : 2,
         },
       ]}
     >
@@ -119,6 +145,7 @@ const ItemInCard = ({ item }) => {
           height: "100%",
           flexDirection: "row",
           paddingRight: 1,
+          borderRadius: 8,
         }}
       >
         <View
@@ -133,10 +160,14 @@ const ItemInCard = ({ item }) => {
         ></View>
         <View
           style={{
-            width: WIDTH >= 800 ? WIDTH / 5 - 35 - (edit ? 30 : 0) : WIDTH / 2 - 35 - (edit ? 30 : 0),
+            width:
+              WIDTH >= 800
+                ? WIDTH / 5 - 35 - (edit ? 30 : 0)
+                : WIDTH / 2 - 35 - (edit ? 30 : 0),
             alignItems: "flex-start",
             justifyContent: "space-around",
-            paddingLeft: 10
+            paddingLeft: 10,
+            borderRadius: 8,
           }}
         >
           {edit ? (
@@ -166,7 +197,9 @@ const ItemInCard = ({ item }) => {
           <Text style={[styles.text, styles.bold, { color: TextColor }]}>
             {item.nev}
           </Text>
-          <Text style={[styles.text, { color: `#${styleColor}` }]}>{item.darab}</Text>
+          <Text style={[styles.text, { color: `#${styleColor}` }]}>
+            {item.darab}
+          </Text>
           <Text style={[styles.text, styles.italic, { color: TextColor2 }]}>
             {item.kiszereles}
           </Text>
@@ -182,7 +215,8 @@ const ItemInCard = ({ item }) => {
               justifyContent: "space-between",
               backgroundColor: "#fff",
               paddingTop: 1,
-              paddingBottom: 1
+              paddingBottom: 1,
+              borderRadius: 8,
             }}
           >
             <Pressable
@@ -266,8 +300,6 @@ const ItemInCard = ({ item }) => {
 
 const styles = StyleSheet.create({
   card: {
-    borderColor: "#D3D3D3",
-    borderWidth: 1,
     borderStyle: "solid",
     borderRadius: 8,
     alignItems: "center",
@@ -283,7 +315,7 @@ const styles = StyleSheet.create({
 
   italic: {
     fontSize: 16,
-    fontWeight: "300"
+    fontWeight: "300",
   },
 
   bold: {

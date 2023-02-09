@@ -15,52 +15,20 @@ import Card from "../UI/Card";
 import AddItem from "./AddItem";
 
 const Raktar = () => {
-  const { page, BASEURL, search, filter, update } = useContext(NavContext);
+  const { page, BASEURL, search, filter, update, items, updateItems } = useContext(NavContext);
   const [res, setRes] = useState("");
   const WIDTH = Dimensions.get("window").width;
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getItems();
+    updateItems();
+    setRefreshing(false);
   }, []);
 
   useEffect(() => {
-    getItems();
-    // let a = [
-    //   {
-    //     id: 1,
-    //     nev: "szilvás",
-    //     kiszereles: 0.5,
-    //   },
-    //   {
-    //     id: 2,
-    //     nev: "szilvás",
-    //     kiszereles: 0.5,
-    //   },
-    //   {
-    //     id: 3,
-    //     nev: "szilvás",
-    //     kiszereles: 0.5,
-    //   },
-    // ];
-    // setRes(a);
+    updateItems();
   }, [search, filter, update]);
-
-  const getItems = () => {
-    fetch(`${BASEURL}palinkak.php`, {
-      method: "post",
-      body: JSON.stringify({
-        search,
-        filter,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setRes(json.data);
-        setRefreshing(false);
-      });
-  };
 
   return (
     <ScrollView
@@ -81,9 +49,9 @@ const Raktar = () => {
           zIndex: 1,
         }}
       >
-        {res !== "" ? (
-          res.length !== 0 ? (
-            <Card array={res} />
+        {items !== "" ? (
+          items.length !== 0 ? (
+            <Card array={items} />
           ) : (
             <AddItem />
           )
