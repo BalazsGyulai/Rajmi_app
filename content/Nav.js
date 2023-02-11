@@ -18,7 +18,7 @@ const COLORS = {
 };
 
 const Nav = ({ style }) => {
-  const { showMenu } = useContext(NavContext);
+  const { showMenu, page } = useContext(NavContext);
 
   useEffect(() => {
     if (showMenu) {
@@ -46,7 +46,10 @@ const Nav = ({ style }) => {
         }}
       >
         <NavButton icon={MenuSvg} left={5} />
+
+        {page === "Raktáron" ?
         <Search />
+        : ""}
       </View>
     </View>
     </>

@@ -4,7 +4,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 const NavContext = createContext();
 
 export function NavFunction({ children }) {
-  const BASEURL = "http://192.168.0.12/";
+  const BASEURL = "http://192.168.0.26/";
   // const BASEURL = "http://localhost/";
   const [page, setPage] = useState("Raktáron");
   const [showMenu, setShowMenu] = useState(false);
@@ -37,8 +37,11 @@ export function NavFunction({ children }) {
     })
       .then((response) => response.json())
       .then((json) => {
-        
-        setVegosszeg(numberSeparator(json.vegosszeg));
+        if (json.vegosszeg === null) {
+          setVegosszeg(numberSeparator("0"));
+        } else {
+          setVegosszeg(numberSeparator(json.vegosszeg));
+        }
       });
   };
 
@@ -49,8 +52,8 @@ export function NavFunction({ children }) {
     let location = 3;
     let separated = 0;
 
-    for (let i = 1; i < array.length; i++){
-      if (i === location){
+    for (let i = 1; i < array.length; i++) {
+      if (i === location) {
         array.splice(i, 0, " ");
         separated += 1;
         location += 3 + separated;
@@ -58,10 +61,9 @@ export function NavFunction({ children }) {
     }
 
     array.reverse();
-    
-    console.log(array);
+
     return array.join("");
-  }
+  };
 
   const changeFilter = (val) => {
     setFilter(val);
@@ -97,7 +99,7 @@ export function NavFunction({ children }) {
         updateItems,
         changeVegosszeg,
         vegosszeg,
-        numberSeparator
+        numberSeparator,
       }}
     >
       {children}

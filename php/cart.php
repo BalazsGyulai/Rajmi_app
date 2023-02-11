@@ -51,21 +51,20 @@ if ($do === "cart") {
     send_data($resp);
 }
 
-if ($do === "getItems"){
+if ($do === "getItems") {
     $result = $database->query("SELECT p.id, p.nev, p.kiszereles, p.color, c.db, c.ar FROM cart c LEFT JOIN palinkak p ON c.id = p.id ORDER BY p.kiszereles DESC, p.nev ASC");
 
     $resp = [];
 
-    foreach ($result as $item){
+    foreach ($result as $item) {
         array_push($resp, $item);
     }
 
     send_data($resp);
-
 }
 
 
-if ($do === "updatedb"){
+if ($do === "updatedb") {
     $item = validate_input($input["item"]);
     $db = validate_input($input["db"]);
     $resp = [];
@@ -84,7 +83,7 @@ if ($do === "updatedb"){
     send_data($db);
 }
 
-if ($do === "updatear"){
+if ($do === "updatear") {
     $item = validate_input($input["item"]);
     $ar = validate_input($input["ar"]);
     $resp = [];
@@ -106,14 +105,63 @@ if ($do === "updatear"){
 if ($do === "updatevegosszeg") {
     $resp = "";
     $result = $database->query("SELECT sum(db * ar) as vegosszeg FROM cart");
-    
-    $num = $result->num_rows;
 
-    if ($num > 0){
-        $resp = $result->fetch_assoc();
-    } else {
-        $resp = "-";
+    $resp = $result->fetch_assoc();
+
+    send_data($resp);
+}
+
+if ($do === "sellItems") {
+    $result = $database->query("SELECT p.id, p.darab as raktar_db, c.db as eladott_db, c.ar FROM cart c
+    LEFT JOIN palinkak p ON c.id = p.id");
+    $date = date("Y.m.d. G:i");
+    $resp = [];
+
+    foreach ($result as $palinka) {
+
+        // add to sell
+        $stmt = $database->stmt_init();
+        if (!$stmt = $database->prepare('INSERT INTO sell(palinka_id, eladott_db, eladasi_ar, idopont) VALUES(?,?,?,?)')) {
+            $resp["status"] = "error";
+            $resp["code"] = "10404";
+
+            send_data($resp);
+        }
+
+        $stmt->bind_param("iiis", $palinka["id"], $palinka["eladott_db"], $palinka["ar"], $date);
+        $stmt->execute();
+
+        // minus palinka
+        $stmt = $database->stmt_init();
+        if (!$stmt = $database->prepare('UPDATE palinkak SET darab = ? WHERE id = ?')) {
+            $resp["status"] = "error";
+            $resp["code"] = "10404";
+
+            send_data($resp);
+        }
+
+        $modified_db = intval($palinka["raktar_db"]);
+        $modified_db -= intval($palinka["eladott_db"]);
+
+        $stmt->bind_param("ii", $modified_db, $palinka["id"]);
+        $stmt->execute();
+
+        // delete cart
+        $stmt = $database->stmt_init();
+        if (!$stmt = $database->prepare('DELETE FROM cart WHERE id = ?')) {
+            $resp["status"] = "error";
+            $resp["code"] = "10404";
+
+            send_data($resp);
+        }
+
+        $stmt->bind_param("i", $palinka["id"]);
+        $stmt->execute();
+
     }
 
+    $stmt->close();
+    
+    $resp["status"] = "ok";
     send_data($resp);
 }
