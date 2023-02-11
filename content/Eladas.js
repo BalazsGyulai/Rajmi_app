@@ -66,9 +66,10 @@ const Eladas = () => {
     <ScrollView
       style={{
         width: "100%",
-        height: "100%",
         zIndex: 1,
         padding: 5,
+        marginBottom: 50,
+        height: Dimensions.get("window").height
       }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -158,7 +159,7 @@ const Eladas = () => {
                 }}
               >
                 {vegosszeg} Ft
-              </Text>{" "}
+              </Text>
             </>
           ) : (
             <View

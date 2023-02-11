@@ -11,7 +11,8 @@ import {
 } from "react-native";
 import NavContext from "../data/NavContext";
 import Raktar from "./Raktar";
-import Eladas from "./Eladas"
+import Eladas from "./Eladas";
+import Bevetel from "./Bevetel";
 
 const ActualPage = () => {
   const { page } = useContext(NavContext);
@@ -24,7 +25,7 @@ const ActualPage = () => {
         height: "100%",
       }}
     >
-      {page === "Raktáron" ? <Raktar /> : page === "Eladás" ? <Eladas /> : ""}
+      {page === "Raktáron" ? <Raktar /> : page === "Eladás" ? <Eladas /> : page === "Bevétel" ? <Bevetel /> : ""}
     </View>
   );
 };
