@@ -88,7 +88,21 @@ if ($do === "delete") {
 
     $stmt->bind_param("i", $id);
     $stmt->execute();
-    
+
+    $stmt = $database->stmt_init();
+    if (!$stmt = $database->prepare('DELETE FROM cart WHERE id = ?')) {
+        $resp["status"] = "error";
+        $resp["code"] = "10404";
+
+        send_data($resp);
+        exit;
+    }
+
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+
+
     $resp["status"] = "ok";
     send_data($resp);
 }
@@ -96,7 +110,7 @@ if ($do === "delete") {
 if ($do === "colorChange") {
 
     $color = validate_input(str_replace("#", "", $input["color"]));
-    
+
 
     $stmt = $database->stmt_init();
     if (!$stmt = $database->prepare('UPDATE palinkak SET color = ? WHERE id = ?')) {
@@ -113,3 +127,4 @@ if ($do === "colorChange") {
     $resp["status"] = "ok";
     send_data($resp);
 }
+

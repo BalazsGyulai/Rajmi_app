@@ -14,7 +14,7 @@ import Svg, { Path, G } from "react-native-svg";
 import NavContext from "../data/NavContext";
 
 const ItemInCard = ({ item }) => {
-  const { BASEURL, updateItems, items } = useContext(NavContext);
+  const { BASEURL, updateItems, items, changeVegosszeg } = useContext(NavContext);
   const WIDTH = Dimensions.get("window").width;
   const [bkg_color, setbgr_btn] = useState("#fff");
   const [edit, setEdit] = useState(false);
@@ -32,6 +32,8 @@ const ItemInCard = ({ item }) => {
       : setStyleColor(checkColor());
 
     item.in_cart != null ? setincart(false) : setincart(true);
+    
+    changeVegosszeg();
   }, [items]);
 
   const checkColor = () => {

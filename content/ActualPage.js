@@ -17,7 +17,7 @@ const ActualPage = () => {
   const { page } = useContext(NavContext);
 
   return (
-    <ScrollView
+    <View
       style={{
         top: 48,
         width: "100%",
@@ -25,7 +25,7 @@ const ActualPage = () => {
       }}
     >
       {page === "Raktáron" ? <Raktar /> : page === "Eladás" ? <Eladas /> : ""}
-    </ScrollView>
+    </View>
   );
 };
 

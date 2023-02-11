@@ -37,6 +37,7 @@ const Nav = ({ style }) => {
       width: "100%",
       zIndex: 13
     }}>
+    <NavMenu />
       <View
         style={{
           flexDirection: "row",
@@ -48,7 +49,6 @@ const Nav = ({ style }) => {
         <Search />
       </View>
     </View>
-    <NavMenu />
     </>
   );
 };
