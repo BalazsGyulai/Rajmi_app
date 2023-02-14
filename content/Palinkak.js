@@ -31,9 +31,10 @@ const Palinkak = ({ palinkak }) => {
           padding: 5,
           marginTop: 5,
           width: Dimensions.get("window").width >= 1000 ?
-            Dimensions.get("window").width / 2 - 15 : 
+            Dimensions.get("window").width / 2 - 10 : 
             Dimensions.get("window").width - 10,
           alignItems: "center",
+          justifyContent: "center"
         }}
       >
         <Text
@@ -56,8 +57,8 @@ const Palinkak = ({ palinkak }) => {
           }}
           width={
             Dimensions.get("window").width >= 1000 ?
-            Dimensions.get("window").width / 2 - 20 : 
-            Dimensions.get("window").width - 20 }
+            Dimensions.get("window").width / 2 - 40 : 
+            Dimensions.get("window").width - 30 }
           height={Dimensions.get("window").height / 2.5 - 10}
           chartConfig={{
             backgroundGradientFrom: "#fff",

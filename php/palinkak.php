@@ -37,7 +37,7 @@ if ($search !== "") {
         $database->close();
     } else {
         $stmt = $database->stmt_init();
-        if (!$stmt = $database->prepare('SELECT * FROM palinka LEFT JOIN (SELECT id as in_cart from cart) a ON palinkak.id = a.in_cart WHERE palinkak.nev LIKE ? ORDER BY palinkak.darab DESC, palinkak.nev ASC, palinkak.kiszereles DESC')) {
+        if (!$stmt = $database->prepare('SELECT * FROM palinkak LEFT JOIN (SELECT id as in_cart from cart) a ON palinkak.id = a.in_cart WHERE palinkak.nev LIKE ? ORDER BY palinkak.darab DESC, palinkak.nev ASC, palinkak.kiszereles DESC')) {
             $resp["status"] = "error";
             $resp["code"] = "10404";
 

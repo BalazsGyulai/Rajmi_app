@@ -10,7 +10,7 @@ import {
   Dimensions,
   TextInput,
 } from "react-native";
-import Svg, { Path, G } from "react-native-svg";
+import Svg, { Path, G, strokeWidth } from "react-native-svg";
 import NavContext from "../data/NavContext";
 
 const ItemInCard = ({ item }) => {
@@ -137,7 +137,7 @@ const ItemInCard = ({ item }) => {
           width: WIDTH >= 800 ? WIDTH / 5 - 15 : WIDTH / 2 - 15,
           height: 170,
           backgroundColor: bkg_color,
-          borderColor: incart ? "#d3d3d3" : "#00b4d8",
+          borderColor: incart ? "#d3d3d3" : "#1982C4",
           borderWidth: incart ? 1 : 2,
         },
       ]}
@@ -183,7 +183,7 @@ const ItemInCard = ({ item }) => {
                 textAlign: "center",
                 borderColor: `#${inputColor}`,
                 backgroundColor: "#ffffff70",
-                borderWidth: 2,
+                borderWidth: 1,
                 borderStyle: "solid",
                 borderRadius: 8,
               }}
@@ -236,7 +236,7 @@ const ItemInCard = ({ item }) => {
                     id="Vector 5"
                     d="M20.5 28H78M41 22.5V19.5C41 18.3954 41.8954 17.5 43 17.5H56C57.1046 17.5 58 18.3954 58 19.5V22.5M26 36.5C26 36.5 26 75 26 77C26 79 28 81 30.5 81C33 81 66.5 81 69 81C71.5 81 73.5 79 73.5 77C73.5 75 73.5 36.5 73.5 36.5M58 40.5V69M41 40.5V69"
                     stroke="#fff"
-                    stroke-width="5"
+                    strokeWidth="5"
                   />
                 </G>
               </Svg>

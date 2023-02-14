@@ -30,7 +30,6 @@ export function NavFunction({ children }) {
       .then((response) => response.json())
       .then((json) => {
 
-        console.log(json);
         if (json.status === "ok"){
 
           setItems(json.data);
@@ -73,7 +72,7 @@ export function NavFunction({ children }) {
   };
 
   const numberSeparator = (num) => {
-    let array = Array.from(num);
+    let array = Array.from(num.toString());
     array.reverse();
 
     let location = 3;
@@ -83,13 +82,14 @@ export function NavFunction({ children }) {
       if (i === location) {
         array.splice(i, 0, " ");
         separated += 1;
-        location += 3 + separated;
+        location += 4;
       }
     }
 
     array.reverse();
-
-    return array.join("");
+    array.join("");
+    
+    return array;
   };
 
   const changeFilter = (val) => {

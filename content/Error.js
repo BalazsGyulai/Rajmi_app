@@ -36,13 +36,17 @@ const Error = () => {
     setErrorCode(error.code || "");
     setErrorText(error.text);
     setVisible(true);
+
+    setTimeout(() => {
+        changeVisible();
+    }, 3000);
   }, [error]);
 
   const changeVisible = () => {
     setVisible((visible) => !visible);
   };
 
-  return (
+  return visible ? (
     <View
       style={{
         padding: 10,
@@ -64,6 +68,7 @@ const Error = () => {
           width: "100%",
           flexDirection: "row",
           alignItems: "center",
+          borderRadius: 10,
         }}
       >
         {errorStatus === "ok" ? (
@@ -166,6 +171,8 @@ const Error = () => {
         </Text>
       </Pressable>
     </View>
+  ) : (
+    ""
   );
 };
 

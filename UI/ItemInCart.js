@@ -182,6 +182,8 @@ const ItemInCart = ({ item }) => {
             cursorColor="#F37335"
             onChangeText={setdb}
             value={db}
+            inputMode="numeric"
+            keyboardType="numeric"
           />
           <Text
             style={{
@@ -227,6 +229,8 @@ const ItemInCart = ({ item }) => {
             cursorColor="#F37335"
             onChangeText={setAr}
             value={ar}
+            inputMode="numeric"
+            keyboardType="numeric"
           />
           <Text
             style={{
@@ -255,7 +259,7 @@ const ItemInCart = ({ item }) => {
               fontSize: 15,
             }}
           >
-            {`${ar * db} Ft`}
+          {numberSeparator(ar * db)} Ft
           </Text>
         </View>
       </View>
