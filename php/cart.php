@@ -14,6 +14,7 @@ if ($do === "cart") {
         $resp["code"] = "10404";
 
         send_data($resp);
+        exit;
     }
 
     $stmt->bind_param("i", $item);
@@ -27,12 +28,12 @@ if ($do === "cart") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
 
         $stmt->bind_param("i", $item);
         $stmt->execute();
 
-        $resp["status"] = "ok";
     } else {
         $stmt = $database->stmt_init();
         if (!$stmt = $database->prepare('DELETE FROM cart WHERE id = ?')) {
@@ -40,27 +41,35 @@ if ($do === "cart") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
 
         $stmt->bind_param("i", $item);
         $stmt->execute();
 
-        $resp["status"] = "ok";
     }
-
+    
+    $resp["status"] = "ok";
     send_data($resp);
+
+    $stmt->close();
+    $database->close();
 }
 
 if ($do === "getItems") {
     $result = $database->query("SELECT p.id, p.nev, p.kiszereles, p.color, c.db, c.ar FROM cart c LEFT JOIN palinkak p ON c.id = p.id ORDER BY p.kiszereles DESC, p.nev ASC");
 
     $resp = [];
+    $resp["data"] = [];
 
     foreach ($result as $item) {
-        array_push($resp, $item);
+        array_push($resp["data"], $item);
     }
 
+    $resp["status"] = "ok";
     send_data($resp);
+
+    $database->close();
 }
 
 
@@ -75,12 +84,18 @@ if ($do === "updatedb") {
         $resp["code"] = "10404";
 
         send_data($resp);
+        exit;
     }
 
     $stmt->bind_param("ii", $db, $item);
     $stmt->execute();
 
-    send_data($db);
+    $resp["db"] = $db;
+    $resp["status"] = "ok";
+    send_data($resp);
+
+    $stmt->close();
+    $database->close();
 }
 
 if ($do === "updatear") {
@@ -94,21 +109,30 @@ if ($do === "updatear") {
         $resp["code"] = "10404";
 
         send_data($resp);
+        exit;
     }
 
     $stmt->bind_param("ii", $ar, $item);
     $stmt->execute();
 
-    send_data($ar);
+    $resp["ar"] = $ar;
+    $resp["status"] = "ok";
+    send_data($resp);
+
+    $stmt->close();
+    $database->close();
 }
 
 if ($do === "updatevegosszeg") {
-    $resp = "";
+    $resp = [];
     $result = $database->query("SELECT sum(db * ar) as vegosszeg FROM cart");
 
-    $resp = $result->fetch_assoc();
+    $resp["data"] = $result->fetch_assoc();
 
+    $resp["status"] = "ok";
     send_data($resp);
+
+    $database->close();
 }
 
 if ($do === "sellItems") {
@@ -126,6 +150,7 @@ if ($do === "sellItems") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
 
         $stmt->bind_param("iiis", $palinka["id"], $palinka["eladott_db"], $palinka["ar"], $date);
@@ -138,6 +163,7 @@ if ($do === "sellItems") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
 
         $modified_db = intval($palinka["raktar_db"]);
@@ -153,6 +179,7 @@ if ($do === "sellItems") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
 
         $stmt->bind_param("i", $palinka["id"]);
@@ -160,8 +187,10 @@ if ($do === "sellItems") {
 
     }
 
-    $stmt->close();
     
     $resp["status"] = "ok";
     send_data($resp);
+
+    $stmt->close();
+    $database->close();
 }

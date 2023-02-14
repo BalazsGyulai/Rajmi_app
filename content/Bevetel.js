@@ -25,7 +25,7 @@ import Palinkak from "./Palinkak";
 import NavContext from "../data/NavContext";
 
 const Bevetel = () => {
-  const { BASEURL } = useContext(NavContext);
+  const { BASEURL, changeError } = useContext(NavContext);
   const [yearStat, setYearStat] = useState("");
   const [palinkak, setPalinkak] = useState("");
   const [yearStatdb, setYearStatdb] = useState(5);
@@ -44,12 +44,20 @@ const Bevetel = () => {
       method: "post",
       body: JSON.stringify({
         do: "getYearStat",
-        years: yearStatdb
+        years: yearStatdb,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        setYearStat(json);
+        if (json.status === "error") {
+          changeError({
+            status: json.status,
+            code: json.code,
+            text: "Valami hiba lépett fel a szerverrel. Próbáld meg frissíteni az oldalt vagy próbálkozz később!",
+          });
+        } else {
+          setYearStat(json);
+        }
       });
   };
 
@@ -63,7 +71,15 @@ const Bevetel = () => {
     })
       .then((response) => response.json())
       .then((json) => {
-        setPalinkak(json);
+        if (json.status === "error") {
+          changeError({
+            status: json.status,
+            code: json.code,
+            text: "Valami hiba lépett fel a szerverrel. Próbáld meg frissíteni az oldalt vagy próbálkozz később!",
+          });
+        } else {
+          setPalinkak(json);
+        }
       });
   };
 
@@ -83,7 +99,7 @@ const Bevetel = () => {
       style={{
         padding: 5,
         marginBottom: 50,
-        height: Dimensions.get("window").height
+        height: Dimensions.get("window").height,
       }}
     >
       {yearStat != "" ? (
@@ -164,9 +180,9 @@ const Bevetel = () => {
             height={Dimensions.get("window").height / 2.5 - 10}
             verticalLabelRotation={45}
             chartConfig={{
-              backgroundGradientFrom: "#F37335",
+              backgroundGradientFrom: "#F3733500",
               backgroundGradientFromOpacity: 1,
-              backgroundGradientTo: "#F37335",
+              backgroundGradientTo: "#F3733500",
               backgroundGradientToOpacity: 1,
               color: (opacity = 1) => `rgba(255,255,255, ${opacity})`,
               strokeWidth: 2, // optional, default 3

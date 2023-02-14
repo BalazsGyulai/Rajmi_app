@@ -17,7 +17,8 @@ import NavContext from "../data/NavContext";
 import CartItem from "../UI/CartItem";
 
 const Eladas = () => {
-  const { BASEURL, vegosszeg, changeVegosszeg } = useContext(NavContext);
+  const { BASEURL, vegosszeg, changeVegosszeg, changeError } =
+    useContext(NavContext);
   const [refreshing, setRefreshing] = React.useState(false);
   const WIDTH = Dimensions.get("window").width;
   const [cart, setCart] = useState("");
@@ -42,7 +43,14 @@ const Eladas = () => {
     })
       .then((response) => response.json())
       .then((json) => {
-        setCart(json);
+        if (json.status === "ok") {
+          setCart(json.data);
+        } else {
+          changeError({
+            status: "error",
+            text: "Valami hiba lépett fel a szerverrel. Próbáld meg frissíteni az oldalt vagy próbálkozz később!",
+          });
+        }
       });
   };
 
@@ -57,8 +65,22 @@ const Eladas = () => {
     })
       .then((response) => response.json())
       .then((json) => {
-        getCartItems();
-        changeVegosszeg();
+
+        if (json.status === "ok"){
+          getCartItems();
+          changeVegosszeg();
+
+          changeError({
+            status: "ok",
+            text: "Sikeres eladás!"
+          })
+        } else {
+          changeError({
+            status: json.status,
+            code: json.code,
+            text: "Hiba lépett fel az eladás közben. Próbáld meg újra vagy próbálkozz később!"
+          })
+        }
       });
   };
 
@@ -69,7 +91,7 @@ const Eladas = () => {
         zIndex: 1,
         padding: 5,
         marginBottom: 50,
-        height: Dimensions.get("window").height
+        height: Dimensions.get("window").height,
       }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -208,10 +230,12 @@ const Eladas = () => {
                 </Svg>
               </View>
               <Text
-              style={{
-                color: "#023047"
-              }}
-              >Nincs semmi a kosárban</Text>
+                style={{
+                  color: "#023047",
+                }}
+              >
+                Nincs semmi a kosárban
+              </Text>
             </View>
           )}
         </View>

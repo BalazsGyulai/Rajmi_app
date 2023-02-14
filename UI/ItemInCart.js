@@ -13,7 +13,7 @@ import {
 import NavContext from "../data/NavContext";
 
 const ItemInCart = ({ item }) => {
-  const { BASEURL, changeVegosszeg, numberSeparator } = useContext(NavContext);
+  const { BASEURL, changeVegosszeg, numberSeparator, changeError } = useContext(NavContext);
   const [border_color_db, setborder_color_db] = useState("#d3d3d3");
   const [border_color_ar, setborder_color_ar] = useState("#d3d3d3");
   const [db, setdb] = useState("");
@@ -40,7 +40,16 @@ const ItemInCart = ({ item }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        changeVegosszeg();
+
+        if (json.status === "ok"){
+          changeVegosszeg();
+        } else {
+          changeError({
+            status: json.status,
+            code: json.code,
+            text: "Valami hiba lépett fel a darab frissítésénél. Próbáld meg frissíteni az oldalt vagy próbálkozz később!"
+          })
+        }
       });
   };
 
@@ -57,7 +66,15 @@ const ItemInCart = ({ item }) => {
     })
       .then((response) => response.json())
       .then((json) => {
-        changeVegosszeg();
+        if (json.status === "ok"){
+          changeVegosszeg();
+        } else {
+          changeError({
+            status: json.status,
+            code: json.code,
+            text: "Valami hiba lépett fel az ár frissítésénél. Próbáld meg frissíteni az oldalt vagy próbálkozz később!"
+          })
+        }
       });
   };
 

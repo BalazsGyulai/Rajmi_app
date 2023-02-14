@@ -4,8 +4,8 @@ import * as ScreenOrientation from "expo-screen-orientation";
 const NavContext = createContext();
 
 export function NavFunction({ children }) {
-  const BASEURL = "http://192.168.0.26/";
-  // const BASEURL = "http://localhost/";
+  const BASEURL = "http://192.168.0.46/";
+  // const BASEURL = "http://gyulaibalazs.hu/RAJMI_APP/";
   const [page, setPage] = useState("Raktáron");
   const [showMenu, setShowMenu] = useState(false);
   const [search, setSearch] = useState("");
@@ -13,6 +13,11 @@ export function NavFunction({ children }) {
   const [update, setUpdate] = useState(false);
   const [items, setItems] = useState("");
   const [vegosszeg, setVegosszeg] = useState("-");
+  const [error, setError] = useState([]);
+
+  const changeError = (val) =>{
+    setError(val);
+  }
 
   const updateItems = () => {
     fetch(`${BASEURL}palinkak.php`, {
@@ -24,7 +29,21 @@ export function NavFunction({ children }) {
     })
       .then((response) => response.json())
       .then((json) => {
-        setItems(json.data);
+
+        console.log(json);
+        if (json.status === "ok"){
+
+          setItems(json.data);
+
+        } else {
+
+          changeError({
+            status: json.status,
+            code: json.code,
+            text: "Valami hiba lépett fel a szerverrel. Próbáld meg frissíteni az oldalt vagy próbálkozz később!"
+          });
+        }
+
       });
   };
 
@@ -37,10 +56,18 @@ export function NavFunction({ children }) {
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.vegosszeg === null) {
-          setVegosszeg(numberSeparator("0"));
+        if (json.status === "ok"){
+
+          if (json.data.vegosszeg === null) {
+            setVegosszeg(numberSeparator("0"));
+          } else {
+            setVegosszeg(numberSeparator(json.data.vegosszeg));
+          }
         } else {
-          setVegosszeg(numberSeparator(json.vegosszeg));
+          changeError({
+            status: "error",
+            text: "Hiba lépett fel a végösszeg frissítésénél. Próbáld meg frissíteni az oldalt vagy próbálkozz újra!"
+          })
         }
       });
   };
@@ -100,6 +127,8 @@ export function NavFunction({ children }) {
         changeVegosszeg,
         vegosszeg,
         numberSeparator,
+        error,
+        changeError
       }}
     >
       {children}

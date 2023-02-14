@@ -28,9 +28,10 @@ const Palinkak = ({ palinkak }) => {
       <View
         key={index}
         style={{
+          padding: 5,
           marginTop: 5,
           width: Dimensions.get("window").width >= 1000 ?
-            Dimensions.get("window").width / 2 - 10 : 
+            Dimensions.get("window").width / 2 - 15 : 
             Dimensions.get("window").width - 10,
           alignItems: "center",
         }}

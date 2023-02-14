@@ -16,6 +16,7 @@ if ($do === "getYearStat") {
         $resp["code"] = "10404";
 
         send_data($resp);
+        exit;
     }
 
     $stmt->bind_param("i", $years);
@@ -31,9 +32,10 @@ if ($do === "getYearStat") {
     $resp["fizetve"] = array_reverse($resp["fizetve"]);
 
     send_data($resp);
-}
 
-// SELECT palinkak.nev, palinkak.kiszereles, palinkak.color, sum(sell.eladott_db) as eladva FROM sell LEFT JOIN palinkak ON sell.palinka_id = palinkak.id WHERE year(idopont) = "2023" GROUP BY palinkak.kiszereles ORDER BY eladva DESC, kiszereles DESC, nev;
+    $stmt->close();
+    $database->close();
+}
 
 if ($do === "getPalinkakdb") {
 
@@ -55,6 +57,7 @@ if ($do === "getPalinkakdb") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
 
         $stmt->bind_param("ss", $year, $name["nev"]);
@@ -79,4 +82,7 @@ if ($do === "getPalinkakdb") {
         array_push($resp, $group);
     }
     send_data($resp);
+
+    $stmt->close();
+    $database->close();
 }

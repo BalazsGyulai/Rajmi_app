@@ -111,9 +111,8 @@ if ($do === "colorChange") {
 
     $color = validate_input(str_replace("#", "", $input["color"]));
 
-
     $stmt = $database->stmt_init();
-    if (!$stmt = $database->prepare('UPDATE palinkak SET color = ? WHERE id = ?')) {
+    if (!$stmt = $database->prepare('SELECT nev FROM palinkak WHERE id = ?')) {
         $resp["status"] = "error";
         $resp["code"] = "10404";
 
@@ -121,10 +120,23 @@ if ($do === "colorChange") {
         exit;
     }
 
-    $stmt->bind_param("si", $color, $id);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
+    $result = $stmt->get_result()->fetch_assoc();
+
+    $stmt = $database->stmt_init();
+    if (!$stmt = $database->prepare('UPDATE palinkak SET color = ? WHERE nev = ?')) {
+        $resp["status"] = "error";
+        $resp["code"] = "10404";
+        
+        send_data($resp);
+        exit;
+    }
+    
+    $stmt->bind_param("ss", $color, $result["nev"]);
     $stmt->execute();
 
     $resp["status"] = "ok";
     send_data($resp);
 }
-

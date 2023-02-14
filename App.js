@@ -11,10 +11,10 @@ import {
 import Nav from "./content/Nav";
 import ActualPage from "./content/ActualPage";
 import { NavFunction } from "./data/NavContext";
+import Error from "./content/Error";
 
 const App = () => {
   const [StatusBarColor, setStatusBarColor] = useState("");
-
 
   return (
     <>
@@ -23,12 +23,14 @@ const App = () => {
         barStyle={StatusBarColor.style}
         hidden={false}
       />
-      <View style={styles.container}>
-        <NavFunction>
+      <NavFunction>
+        <View style={styles.container}>
           <ActualPage />
           <Nav style={(newVal) => setStatusBarColor(newVal)} />
-        </NavFunction>
-      </View>
+        </View>
+
+        <Error />
+      </NavFunction>
     </>
   );
 };

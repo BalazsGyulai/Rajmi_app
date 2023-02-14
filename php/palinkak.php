@@ -17,13 +17,8 @@ if ($search !== "") {
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
-        // if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? AND kiszereles = ? ORDER BY darab DESC, nev ASC, kiszereles DESC')) {
-        //     $resp["status"] = "error";
-        //     $resp["code"] = "10404";
-
-        //     send_data($resp);
-        // }
 
         $stmt->bind_param("sd", $search, $filter);
         $stmt->execute();
@@ -35,21 +30,20 @@ if ($search !== "") {
             array_push($resp["data"], $item);
         }
 
+        $resp["status"] = "ok";
         send_data($resp);
+
+        $stmt->close();
+        $database->close();
     } else {
         $stmt = $database->stmt_init();
-        if (!$stmt = $database->prepare('SELECT * FROM palinkak LEFT JOIN (SELECT id as in_cart from cart) a ON palinkak.id = a.in_cart WHERE palinkak.nev LIKE ? ORDER BY palinkak.darab DESC, palinkak.nev ASC, palinkak.kiszereles DESC')) {
+        if (!$stmt = $database->prepare('SELECT * FROM palinka LEFT JOIN (SELECT id as in_cart from cart) a ON palinkak.id = a.in_cart WHERE palinkak.nev LIKE ? ORDER BY palinkak.darab DESC, palinkak.nev ASC, palinkak.kiszereles DESC')) {
             $resp["status"] = "error";
             $resp["code"] = "10404";
 
             send_data($resp);
+            exit;
         }
-        // if (!$stmt = $database->prepare('SELECT * FROM palinkak WHERE nev LIKE ? ORDER BY darab DESC, nev ASC, kiszereles DESC ')) {
-        //     $resp["status"] = "error";
-        //     $resp["code"] = "10404";
-
-        //     send_data($resp);
-        // }
 
         $stmt->bind_param("s", $search);
         $stmt->execute();
@@ -61,7 +55,11 @@ if ($search !== "") {
             array_push($resp["data"], $item);
         }
 
+        $resp["status"] = "ok";
         send_data($resp);
+
+        $stmt->close();
+        $database->close();
     }
 } else {
     $resp["data"] = [];
@@ -72,5 +70,9 @@ if ($search !== "") {
         array_push($resp["data"], $item);
     }
 
+    $resp["status"] = "ok";
     send_data($resp);
+
+    $stmt->close();
+    $database->close();
 }
